@@ -3,7 +3,7 @@
  * Enables offline functionality and caching
  */
 
-const CACHE_NAME = 'story-dice-v16-purple-outline';
+const CACHE_NAME = 'story-dice-v17-mobile-fixes';
 const urlsToCache = [
   './',
   './index.html',

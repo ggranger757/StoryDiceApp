@@ -31,9 +31,12 @@ const Dice3D = (() => {
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f4f8);
 
-    // Camera - Bird's eye view
-    camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.set(0, 18, 0);
+    // Camera - Bird's eye view (adjusted for mobile)
+    const isMobile = width < 768;
+    const fov = isMobile ? 55 : 45; // Wider FOV on mobile to fit more dice
+    const cameraHeight = isMobile ? 22 : 18; // Higher camera on mobile
+    camera = new THREE.PerspectiveCamera(fov, width / height, 0.1, 1000);
+    camera.position.set(0, cameraHeight, 0);
     camera.lookAt(0, 0, 0);
 
     // Create renderer
@@ -92,7 +95,7 @@ const Dice3D = (() => {
     ctx.strokeRect(4, 4, 504, 504);
 
     // Emoji (larger, centered higher)
-    ctx.font = '180px Arial';
+    ctx.font = '180px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Android Emoji", sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(emoji, 256, 200);
@@ -146,7 +149,9 @@ const Dice3D = (() => {
    */
   const positionDice = (diceArray) => {
     const count = diceArray.length;
-    const spacing = 3.5;
+    // Reduce spacing on mobile to fit all 6 dice
+    const isMobile = container && container.clientWidth < 768;
+    const spacing = isMobile ? 2.8 : 3.5;
     const startX = -(count - 1) * spacing / 2;
 
     diceArray.forEach((dice, index) => {

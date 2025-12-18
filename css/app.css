@@ -420,6 +420,27 @@ body {
   }
 }
 
+@media (max-width: 768px) {
+  /* Make roll and reset buttons same size on mobile */
+  .roll-button,
+  .reset-button {
+    padding: 10px 24px;
+    font-size: 14px;
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .roll-icon,
+  .reset-icon {
+    font-size: 18px;
+  }
+  
+  .reset-text,
+  .roll-button span {
+    font-size: 14px;
+  }
+}
+
 @media (max-width: 480px) {
   .dice-display-3d {
     height: 300px;
