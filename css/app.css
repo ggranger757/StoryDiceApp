@@ -184,7 +184,7 @@ body {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   border: none;
-  padding: 12px 28px;
+  padding: 12px 32px;
   border-radius: var(--radius-xl);
   font-size: 16px;
   font-weight: 700;
@@ -193,7 +193,7 @@ body {
   transition: all 0.3s;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .reset-button:hover {
@@ -353,7 +353,7 @@ body {
   font-size: 12px;
   font-weight: 600;
   color: var(--category-color);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }

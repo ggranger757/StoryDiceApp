@@ -66,13 +66,8 @@ const UI = (() => {
       }
     });
     
-    console.log('setup3DDiceDisplay: diceConfigs.length =', diceConfigs.length);
-    console.log('setup3DDiceDisplay: dice3DContainer =', dice3DContainer);
-    
     if (diceConfigs.length > 0 && dice3DContainer) {
-      console.log('Adding dice to scene...');
       Dice3D.addDice(diceConfigs);
-      console.log('Dice added!');
     }
   };
 

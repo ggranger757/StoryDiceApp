@@ -75,12 +75,20 @@ const Dice3D = (() => {
 
   /**
    * Create a canvas texture with emoji + text
+   * iOS-compatible emoji rendering
    */
   const createDiceTexture = (emoji, text) => {
     const canvas = document.createElement('canvas');
     canvas.width = 512;
     canvas.height = 512;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', {
+      willReadFrequently: false,
+      alpha: true
+    });
+
+    // Enable better text rendering for iOS
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 
     // Background gradient
     const gradient = ctx.createLinearGradient(0, 0, 512, 512);
@@ -95,18 +103,33 @@ const Dice3D = (() => {
     ctx.strokeRect(4, 4, 504, 504);
 
     // Emoji (larger, centered higher)
-    ctx.font = '180px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Android Emoji", sans-serif';
+    // iOS-specific: Use system font stack with Apple Color Emoji first
+    ctx.font = '180px "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    
+    // iOS fix: Set fillStyle before drawing emoji
+    ctx.fillStyle = '#000000';
+    
+    // iOS fix: Draw emoji multiple times to ensure it renders
     ctx.fillText(emoji, 256, 200);
+    
+    // Force canvas to update (iOS fix)
+    ctx.save();
+    ctx.restore();
 
     // Text label (below emoji)
-    ctx.font = 'bold 56px Arial';
+    ctx.font = 'bold 56px -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
     ctx.fillStyle = '#2c3e50';
     ctx.fillText(text, 256, 360);
 
+    // Create texture with proper settings for iOS
     const texture = new THREE.CanvasTexture(canvas);
     texture.needsUpdate = true;
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.generateMipmaps = false;
+    
     return texture;
   };
 
@@ -183,8 +206,20 @@ const Dice3D = (() => {
           dice.position.set(x, 0, z);
         }
       });
+    } else if (count === 4) {
+      // With 4 dice, arrange in 2x2 grid (2 on top, 2 on bottom)
+      const spacing = isMobile ? 3.2 : 4.0; // Spacing between columns
+      const rowSpacing = isMobile ? 3.6 : 4.2; // Spacing between rows
+      
+      diceArray.forEach((dice, index) => {
+        const row = Math.floor(index / 2); // 0 or 1
+        const col = index % 2; // 0 or 1
+        const x = (col - 0.5) * spacing; // Center around 0: -spacing/2, +spacing/2
+        const z = (row - 0.5) * rowSpacing; // Center around 0: -rowSpacing/2, +rowSpacing/2
+        dice.position.set(x, 0, z);
+      });
     } else {
-      // Single row layout for fewer dice (2, 3, 4)
+      // Single row layout for fewer dice (2, 3)
       const spacing = isMobile ? 3.2 : 4.0; // Increased spacing to prevent touching
       const startX = -(count - 1) * spacing / 2;
       
@@ -383,6 +418,11 @@ const Dice3D = (() => {
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
+    
+    // Reposition dice based on new screen size
+    if (diceObjects.length > 0) {
+      positionDice(diceObjects);
+    }
   };
 
   /**
