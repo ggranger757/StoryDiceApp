@@ -8,6 +8,8 @@ const UI = (() => {
   let isEditMode = false;
   let dice3DContainer = null;
   let resetTimer = null;  // Timer to reset to 3D after 60 seconds
+  let diceRollAudio = null;  // Audio element for dice rolling sound
+  
   const audioContext = (() => {
     try {
       return new (window.AudioContext || window.webkitAudioContext)();
@@ -15,6 +17,32 @@ const UI = (() => {
       return null;
     }
   })();
+  
+  // Initialize dice roll sound
+  const initDiceRollSound = () => {
+    if (!diceRollAudio) {
+      diceRollAudio = new Audio('sounds/dice-roll.mp3');
+      diceRollAudio.volume = 0.6;
+    }
+  };
+  
+  const playDiceRollSound = () => {
+    if (!GameState.isSoundEnabled()) return;
+    initDiceRollSound();
+    try {
+      diceRollAudio.currentTime = 0;
+      diceRollAudio.play().catch(e => console.error('Audio play failed:', e));
+    } catch (e) {}
+  };
+  
+  const stopDiceRollSound = () => {
+    if (diceRollAudio) {
+      try {
+        diceRollAudio.pause();
+        diceRollAudio.currentTime = 0;
+      } catch (e) {}
+    }
+  };
 
   const playSound = (frequency = 800, duration = 100) => {
     if (!GameState.isSoundEnabled() || !audioContext) return;
@@ -463,6 +491,8 @@ const UI = (() => {
     diceAreSet = false;  // Allow dice to be recreated with new values
     render();
 
+    // Play dice rolling sound
+    playDiceRollSound();
     playSound(400, 100);
     triggerHaptic('medium');
 
@@ -482,6 +512,8 @@ const UI = (() => {
     }
 
     // Immediately switch to 2D after animation completes (no delay)
+    // Stop dice rolling sound when 2D results display
+    stopDiceRollSound();
     playSound(800, 150);
     triggerHaptic('success');
 
