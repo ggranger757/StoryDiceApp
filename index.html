@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    
+    <!-- Primary Meta Tags -->
+    <title>Story Dice - Creative Writing Tool</title>
+    <meta name="title" content="Story Dice - Creative Writing Tool">
+    <meta name="description" content="Roll for creative inspiration. Generate story prompts with beautiful 3D dice.">
+    <meta name="author" content="Story Dice">
+    <meta name="keywords" content="writing prompts, story generator, creative writing, dice roller, writer tools, PWA">
+    
+    <!-- Theme & PWA -->
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Story Dice">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" href="./icons/favicon.png">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    
+    <!-- Disable pull-to-refresh on mobile -->
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <style>
+        body {
+            overscroll-behavior-y: contain;
+        }
+    </style>
+    
+    <link rel="stylesheet" href="./css/app.css">
+</head>
+<body>
+    <div id="app"></div>
+    
+    <!-- Three.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="./js/dice-data.js"></script>
+    <script src="./js/genres.js"></script>
+    <script src="./js/genre-dice-data.js"></script>
+    <script src="./js/state.js"></script>
+    <script src="./js/dice-engine.js"></script>
+    <script src="./js/dice-3d.js"></script>
+    <script src="./js/ui.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>
