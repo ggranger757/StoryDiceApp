@@ -33,8 +33,8 @@ const Dice3D = (() => {
 
     // Camera - Bird's eye view (adjusted for mobile)
     const isMobile = width < 768;
-    const fov = isMobile ? 55 : 45; // Wider FOV on mobile to fit more dice
-    const cameraHeight = isMobile ? 22 : 18; // Higher camera on mobile
+    const fov = isMobile ? 50 : 45; // Slightly wider FOV on mobile
+    const cameraHeight = isMobile ? 13 : 18; // Much lower camera on mobile for closer view
     camera = new THREE.PerspectiveCamera(fov, width / height, 0.1, 1000);
     camera.position.set(0, cameraHeight, 0);
     camera.lookAt(0, 0, 0);
@@ -149,14 +149,29 @@ const Dice3D = (() => {
    */
   const positionDice = (diceArray) => {
     const count = diceArray.length;
-    // Reduce spacing on mobile to fit all 6 dice
     const isMobile = container && container.clientWidth < 768;
-    const spacing = isMobile ? 2.8 : 3.5;
-    const startX = -(count - 1) * spacing / 2;
-
-    diceArray.forEach((dice, index) => {
-      dice.position.set(startX + index * spacing, 0, 0);
-    });
+    
+    // On mobile with 6 dice, arrange in 2 rows of 3
+    if (isMobile && count === 6) {
+      const spacing = 2.8;
+      const rowSpacing = 3.2;
+      
+      diceArray.forEach((dice, index) => {
+        const row = Math.floor(index / 3); // 0 or 1
+        const col = index % 3; // 0, 1, or 2
+        const x = (col - 1) * spacing; // Center around 0: -spacing, 0, +spacing
+        const z = (row - 0.5) * rowSpacing; // Center around 0: -rowSpacing/2, +rowSpacing/2
+        dice.position.set(x, 0, z);
+      });
+    } else {
+      // Single row layout for desktop or fewer dice
+      const spacing = isMobile ? 2.3 : 3.5;
+      const startX = -(count - 1) * spacing / 2;
+      
+      diceArray.forEach((dice, index) => {
+        dice.position.set(startX + index * spacing, 0, 0);
+      });
+    }
   };
 
   /**

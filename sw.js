@@ -3,7 +3,7 @@
  * Enables offline functionality and caching
  */
 
-const CACHE_NAME = 'story-dice-v17-mobile-fixes';
+const CACHE_NAME = 'story-dice-v21-emoji-size-fix';
 const urlsToCache = [
   './',
   './index.html',

@@ -207,7 +207,7 @@ body {
 }
 
 .reset-icon {
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .reset-text {
@@ -432,7 +432,7 @@ body {
   
   .roll-icon,
   .reset-icon {
-    font-size: 18px;
+    font-size: 20px;
   }
   
   .reset-text,
@@ -873,8 +873,9 @@ button:focus-visible {
 }
 
 .result-square-emoji {
-  font-size: 48px;
+  font-size: 40px;
   line-height: 1;
+  margin-bottom: 4px;
 }
 
 .result-square-label {
@@ -915,7 +916,7 @@ button:focus-visible {
   }
   
   .result-square-emoji {
-    font-size: 36px;
+    font-size: 32px;
   }
   
   .result-square-text {
