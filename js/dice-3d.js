@@ -34,7 +34,7 @@ const Dice3D = (() => {
     // Camera - Bird's eye view (adjusted for mobile)
     const isMobile = width < 768;
     const fov = isMobile ? 50 : 45; // Slightly wider FOV on mobile
-    const cameraHeight = isMobile ? 13 : 18; // Much lower camera on mobile for closer view
+    const cameraHeight = isMobile ? 11 : 15; // Closer camera for better zoom
     camera = new THREE.PerspectiveCamera(fov, width / height, 0.1, 1000);
     camera.position.set(0, cameraHeight, 0);
     camera.lookAt(0, 0, 0);
@@ -151,10 +151,10 @@ const Dice3D = (() => {
     const count = diceArray.length;
     const isMobile = container && container.clientWidth < 768;
     
-    // On mobile with 6 dice, arrange in 2 rows of 3
-    if (isMobile && count === 6) {
-      const spacing = 2.8;
-      const rowSpacing = 3.2;
+    // With 6 dice, always arrange in 2 rows of 3 (3 on top, 3 on bottom)
+    if (count === 6) {
+      const spacing = isMobile ? 3.2 : 4.0; // Spacing between columns
+      const rowSpacing = isMobile ? 3.6 : 4.2; // Spacing between rows
       
       diceArray.forEach((dice, index) => {
         const row = Math.floor(index / 3); // 0 or 1
@@ -163,9 +163,29 @@ const Dice3D = (() => {
         const z = (row - 0.5) * rowSpacing; // Center around 0: -rowSpacing/2, +rowSpacing/2
         dice.position.set(x, 0, z);
       });
+    } else if (count === 5) {
+      // With 5 dice, arrange in 2 rows: 3 on top, 2 on bottom (centered)
+      const spacing = isMobile ? 3.2 : 4.0; // Spacing between columns
+      const rowSpacing = isMobile ? 3.6 : 4.2; // Spacing between rows
+      
+      diceArray.forEach((dice, index) => {
+        if (index < 3) {
+          // Top row: 3 dice
+          const col = index; // 0, 1, or 2
+          const x = (col - 1) * spacing; // Center around 0: -spacing, 0, +spacing
+          const z = -rowSpacing / 2; // Top row
+          dice.position.set(x, 0, z);
+        } else {
+          // Bottom row: 2 dice (centered)
+          const col = index - 3; // 0 or 1
+          const x = (col - 0.5) * spacing; // Center around 0: -spacing/2, +spacing/2
+          const z = rowSpacing / 2; // Bottom row
+          dice.position.set(x, 0, z);
+        }
+      });
     } else {
-      // Single row layout for desktop or fewer dice
-      const spacing = isMobile ? 2.3 : 3.5;
+      // Single row layout for fewer dice (2, 3, 4)
+      const spacing = isMobile ? 3.2 : 4.0; // Increased spacing to prevent touching
       const startX = -(count - 1) * spacing / 2;
       
       diceArray.forEach((dice, index) => {
